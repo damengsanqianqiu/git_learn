@@ -828,5 +828,150 @@ Git 鼓励大量使用分支：
 合并某分支到当前分支： `git merge <name>`  
 删除分支： `git branch -d <name>`
 
+### 解决冲突
+
+合并分支的时候会出现冲突的情况。下面举实例进行说明：
+
+```code
+$ git switch -c featurel
+Switched to a new branch 'featurel'
+```
+
+修改 `readme.txt` 最后一行，改为：
+
+```code
+Creating a new branch is quick AND simple.
+```
+
+```code
+$ git add readme.txt 
+$ git commit -m "AND simple"
+[featurel 0c8c6ad] AND simple
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+```
+
+切换到 `master` 分支：
+
+```code
+$ git switch master
+Switched to branch 'master'
+Your branch is up to date with 'origin/master'.
+```
+
+在 `master` 分支上把 `readme.txt` 文件的最后一行改为：
+
+```code
+Creating a new branch is quick & simple.
+```
+
+提交：
+
+```code
+$ git add readme.txt
+$ git commit -m "& simple"
+[master 0808726] & simple
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+```
+
+现在，`master` 分支和 `featurel` 分支各自都分别有 新的提交变成如下图所示：
+
+![conflict_branch](image/conflict_branch.png)
+
+这种情况下，Git 无法执行 "快速合并"，只能试图把各自的修改合并起来，但是这种合并就可能会有冲突。  
+
+```code
+$ git merge featurel
+Auto-merging readme.txt
+CONFLICT (content): Merge conflict in readme.txt
+Automatic merge failed; fix conflicts and then commit the result.
+```
+
+Git 告诉我们，`readme.txt` 文件存在冲突，必须解决冲突后再提交。`git status` 也可以告诉我们冲突的文件：
+
+```code
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 1 commit.
+  (use "git push" to publish your local commits)
+
+You have unmerged paths.
+  (fix conflicts and run "git commit")
+  (use "git merge --abort" to abort the merge)
+
+Unmerged paths:
+  (use "git add <file>..." to mark resolution)
+    both modified:   readme.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+我们可以直接查看 readme.txt 的内容
+
+```code
+Git is a distributed version control system.
+Git is free software distributed under the GPL.
+Git has a mutable index called stage.
+Git tracks changes.
+<<<<<<< HEAD
+Creating  a new branch is quick & simple.
+=======
+Creating  a new branch is quick AND simple.
+>>>>>>> featurel
+```
+
+Git用 `<<<<<<<`,`=======`,`>>>>>>>` 标记出不同分支的内容，我们修改如下后保存：
+
+```code
+Creating a new branch is quick and simple.
+```
+
+再提交
+
+```code
+$ git add readme.txt
+$ git commit -m "conflict fixed"
+[master c9c0a09] conflict fixed
+```
+
+现在，`master` 分支和 `featurel` 分支变成了下图所示：
+
+![conflict_fixed_merge](image/conflict_fixed_merge.jpg)
+
+用带参数的 `git log` 也可以看到分支的合并情况：
+
+```code
+$ git log --graph --pretty=oneline --abbrev-commit
+*   31cbd3d (HEAD -> master) conflict fixed
+|\  
+| * 0c8c6ad (featurel) AND simple
+* | 7bef0e9 & simple
+|/  
+* 88b8e8f (origin/master) learn how to create and merge branch
+* c4fee22 branch test
+* 51e75c9 add dir Image
+* 6d9c499 add catalog and know how to clone from Github
+* 0dbf81a add knowledge about git
+* 6c33acb remove test.txt
+* f5bda21 add test.txt
+* d0c085d git tracks changes
+* 8d4349c understand how stage works
+* a58b4d1 append GPL
+* f99120a add distributed
+* ddc374f wrote a readme file
+```
+
+最后删除 `featurel` 分支：
+
+```code
+git branch -d featurel
+Deleted branch featurel (was 0c8c6ad).
+```
+
+#### 小结
+
+当 Git 无法自动合并分支时，需要先解决冲突。解决冲突后，再提交，合并。  
+解决冲突就是把 Git 合并失败的文件手动编辑成我们希望的内容，再提交。  
+用 `git log --graph` 命令可以看到分支合并图。
+
 
 ---
