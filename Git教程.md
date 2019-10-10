@@ -663,4 +663,27 @@ Warning: Permanently added 'github.com' (RSA) to the list of known hosts.
 
 ### 从远程库克隆
 
+上面讲了现有本地库，后又远程库的时候，如何关联远程库  
+现在，假设，先创建远程库，然后，从远程库克隆。  
+首先，登录 GitHub，创建一个新的仓库，名字叫 `gitskills`：  
+然后勾选 `Initialize this repository with a README`,这样 GitHub 会自动创建一个 `README.md` 文件。  
+远程库已经创建完成，使用 `git clone` 克隆一个本地库：
+
+```code
+$ git clone git@github.com:damengsanqianqiu/gitskills.git
+Cloning into 'gitskills'...
+remote: Enumerating objects: 3, done.
+remote: Counting objects: 100% (3/3), done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+Receiving objects: 100% (3/3), done.
+Checking connectivity... done.
+```
+
+Git 支持多种协议，默认的 `git://` 使用 ssh，但也可以使用 `https` 等其他协议。
+
+#### 小结
+
+要克隆一个仓库，首先必须知道仓库的地址，然后使用 `git clone` 命令克隆。  
+Git 支持多种协议，包括 `https` ，但通过 `ssh` 支持的原生 `git` 协议速度最快。
+
 ---
