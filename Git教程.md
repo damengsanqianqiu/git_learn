@@ -1,3 +1,4 @@
+[toc]
 # Git 教程
 
 ## Git 简介
@@ -685,5 +686,147 @@ Git 支持多种协议，默认的 `git://` 使用 ssh，但也可以使用 `htt
 
 要克隆一个仓库，首先必须知道仓库的地址，然后使用 `git clone` 命令克隆。  
 Git 支持多种协议，包括 `https` ，但通过 `ssh` 支持的原生 `git` 协议速度最快。
+
+---
+
+## 分支管理
+
+### 创建和合并分支
+
+在[版本回退](#版本回退)中，可以了解到，每次提交，Git 都把它们串成一条时间线，这条时间线就是一个分支。目前，只有一条时间线， 在 Git 里，这个分支叫主分支，即 `master` 分支。`HEAD` 严格来说不是指向提交，而是指向 `master`，`master` 才是指向提交的，所以 `HEAD` 指向的就是当前分支。  
+一开始，`master` 分支就是一条线，Git 用 `master` 指向最新的提交，再用 `HEAD` 指向 `master`，就可以确定当前分支，以及当前分支的提交点：
+
+![HEAD_master](image/HEAD_master.png)
+
+每次提交，`master` 分支都会向前移动一步，择优，随着不断提交，`master`分支的线会越来越长。
+
+当我们创建新的分支，例如 `dev` 时，Git，新建一个指针叫 `dev`，指向 `master` 相同的提交，再把 `HEAD` 指向 `dev`，就表示当前的分支在 `dev` 上：
+
+![HEAD_dev_master](image/HEAD_dev_master.png)
+
+Git 创建分支很快，除了增加一个 `dev` 指针,改 `HEAD`的指向，工作区的文件都没有任何变化。  
+
+现在，对工作区的修改和提交就是针对 `dev` 分支，比如新提交一次后，`dev` 指针往前移动一步，而 `master` 指针不变：
+
+![HEAD_dev](image/HEAD_dev.png)
+
+假如，在 `dev` 上的工作完成了，就可把 `dev` 合并到 `master`上。最简单的方法就是直接把 `master` 指向 `dev` 的当前提交 ，就完成了合并：
+
+![HEAD_master_dev](image/HEAD_master_dev.png)
+
+所以 Git 合并分支也很快，改指针，工作区内容不变！  
+合并完分之后，甚至可以删除 `dev` 分支。删除 `dev` 分支就是把 `dev` 指针给删除掉，删除后，就剩下一条 `master` 分支：
+
+![DELETE_dev](image/DELETE_dev.png)
+
+下面开始实战。  
+首先，创建 `dev` 分支，然后切换到 `dev` 分支：
+
+```code
+$ git checkout -b dev
+Switched to a new branch 'dev'
+```
+
+`git checkout` 命令加上 `-b` 参数表示创建并切换，相当于两条命令：
+
+```code
+$ git branch dev
+$ git checkout dev
+Switched to branch 'dev'
+```
+
+然后，用 `git branch` 命令查看当前分支：
+
+```code
+$ git branch
+* dev
+  master
+```
+
+`git branch` 命令会列出所有的分支，当前分支前面会标记一个 `*` 号。  
+然后，可以尝试在 `dev` 分支上正提交，比如对 `readme.txt` 做个修改，加上一行：
+
+```code
+Creating a new branch is quick.
+```
+
+然后提交：
+
+```code
+$ git add readme.txt
+$ git commit -m "branch test"
+[dev c4fee22] branch test
+ 1 file changed, 1 insertion(+)
+```
+
+现在，`dev` 分支的工作完成，我们就可以切换回 `master` 分支：
+
+```code
+$ git checkout master
+Switched to branch 'master'
+```
+
+切换回 `master` 分支后，再查看一个 readme.txt 文件，刚才添加的内容不见了。  
+因为刚才提交的是在 `dev` 分支上，而 `master` 分支此刻的提交点并没有变：
+
+![CHANGE_dev](image/CHANGE_dev.png)
+
+现在，我们把 `dev` 分支的工作结果合并到 `master` 分支上：
+
+```code
+$ git merge dev
+Updating 51e75c9..c4fee22
+Fast-forward
+ readme.txt | 1 +
+ 1 file changed, 1 insertion(+)
+```
+
+`git merge` 命令用于合并指定分支到当前分支。合并后，再查看 `readme.txt` 的内容，就可看到，和 `dev` 分支的最新提交是完全一样的。  
+注意上面有个 `Fast-forward` 信息，Git 告诉我们，这次合并是 "快速模式"，也就是直接把 `master` 指向 `dev` 的当前提交，所以合并速度非常快。
+
+**注意：**，并不是每次合并都能 `Fast-forward`。  
+合并完成后，就可以删除 `dev` 分支了：
+
+```code
+$ git branch -d dev
+Deleted branch dev (was c4fee22).
+```
+
+此时使用 `git branch` 名称查看分支，就剩下 `master`
+
+```code
+git branch
+* master
+```
+
+#### switch
+
+我们注意到切换分支使用 `git checkout <branch>` ,前面讲过的[撤销修改](#撤销修改)则是 `git checout -- <file>`，同一个命令，有两个作用。  
+实际上，切换分支这个动作，用 `switch` 更科学。  
+Git 提供新的 `git switch` 命令来切换分支：  
+创建并切换到新的 `dev` 分支，可以使用：  
+
+```code
+$ git switch -c dev
+```
+
+切换到已有的 `master` 分支，可以使用：
+
+```code
+$ git switch master
+```
+
+使用 `git switch` 比 `git checkout` 更容易理解。
+
+#### 小结
+
+Git 鼓励大量使用分支：  
+查看分支： `git branch`  
+创建分支： `git branch <name>`  
+切换分支： `git checkout <name>` 或者 `git switch <name>`  
+创建 + 切换分支： `git checkout -b <name>` 或者 `git switch -c <name>`  
+合并某分支到当前分支： `git merge <name>`  
+删除分支： `git branch -d <name>`
+
 
 ---
