@@ -1064,4 +1064,28 @@ $ git log --graph --pretty=oneline --abbrev-commit
 
 合并分支时，加上 `--no-ff` 参数就可以用普通模式合并，合并后的历史有分支，能看出曾经做过合并，而 `Fast forward` 合并就看不出来做过合并。
 
+### Bug 分支
+
+软件开发中， bug 是经常出现的。有了 bug 就需要修复。所以每个 bug 都可以通过一个新的临时分支来修复，合并分支，然后将临时分支删除。
+
+举例：当街道一个代号为 007 的 bug任务时，这些最开始的想法是创建一个分支 `issue-007` 来修改它。但是手中还有正在 `dev` 分支上进行的工作还没有提交：
+
+```code
+$ git status
+On branch dev
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+    new file:   hello.py
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+    modified:   readme.txt
+```
+
+Git 提供了一个 `stash` 功能，可以把当前工作现场“储藏”起来，等以后恢复现场继续工作
+
+
 ---
