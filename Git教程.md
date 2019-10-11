@@ -1,4 +1,34 @@
-[toc]
+Table of Contents
+=================
+
+   * [Git 教程](#git-教程)
+      * [Git 简介](#git-简介)
+         * [创建版本库](#创建版本库)
+            * [小结](#小结)
+      * [时光穿梭机](#时光穿梭机)
+         * [小结](#小结-1)
+         * [版本回退](#版本回退)
+            * [小结](#小结-2)
+         * [工作区和暂存区](#工作区和暂存区)
+         * [管理修改](#管理修改)
+         * [撤销修改](#撤销修改)
+            * [小结](#小结-3)
+         * [删除文件](#删除文件)
+            * [小结](#小结-4)
+      * [远程仓库](#远程仓库)
+         * [添加远程库](#添加远程库)
+            * [SSH 警告](#ssh-警告)
+            * [小结](#小结-5)
+         * [从远程库克隆](#从远程库克隆)
+            * [小结](#小结-6)
+      * [分支管理](#分支管理)
+         * [创建和合并分支](#创建和合并分支)
+            * [switch](#switch)
+            * [小结](#小结-7)
+         * [解决冲突](#解决冲突)
+            * [小结](#小结-8)
+         * [分支管理策略](#分支管理策略)
+
 # Git 教程
 
 ## Git 简介
@@ -973,5 +1003,61 @@ Deleted branch featurel (was 0c8c6ad).
 解决冲突就是把 Git 合并失败的文件手动编辑成我们希望的内容，再提交。  
 用 `git log --graph` 命令可以看到分支合并图。
 
+### 分支管理策略
+
+通常，合并分支时，如果可能， Git 会用 `Fast forward` 模式，但这种模式下，删除分之后，会丢掉分支信息。  
+如果要强制禁用 `Fast forward` 模式，Git 就会在 `merge` 时，生成一个新的 commit，这样，从分支历史上就可以看出分支信息。  
+开始实战，`--no-ff` 方式下的 `git merge`:  
+首先，创建并切换 `dev` 分支：
+
+```code 
+$ git switch -c dev
+Switched to a new branch 'dev'
+```
+
+修改 readme.txt 文件，并提交一个新的 `commit`:
+
+```code
+$ git add readme.txt
+$ git commit -m "add merge"
+[dev 355581b] add merge
+ 1 file changed, 1 insertion(+)
+```
+
+现在切换会 `master` 分支：
+
+```code
+$ git switch master
+Switched to branch 'master'
+```
+
+准备合并 `dev` 分支，请注意 `--no-ff` 参数，表示禁用 `Fast forward`:
+
+```code
+$ git merge --no-ff -m "merge with no-ff" dev
+Merge made by the 'recursive' strategy.
+ readme.txt | 1 +
+ 1 file changed, 1 insertion(+)
+```
+
+因为本次合并要创建一个新的 `commit`，所以加上 `-m` 参数，把 `commit` 描述写进去。  
+合并后，用 `git log` 查看分支历史
+
+```code
+$ git log --graph --pretty=oneline --abbrev-commit
+*   53dd626 (HEAD -> master) merge with no-ff
+|\  
+| * 355581b (dev) add merge
+|/  
+......
+```
+
+不使用 `Fast forward` 模式，merge 后就想下图所示：
+
+![no-ff_merge](image/no-ff_merge.png)
+
+#### 小结
+
+合并分支时，加上 `--no-ff` 参数就可以用普通模式合并，合并后的历史有分支，能看出曾经做过合并，而 `Fast forward` 合并就看不出来做过合并。
 
 ---
