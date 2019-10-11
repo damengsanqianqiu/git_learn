@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-Table of Contents
-=================
-
+<!--ts-->
    * [Git 教程](#git-教程)
-=======
-* [Git 教程](#git-教程)
->>>>>>> 81a673821634e66cdae959b15245caec7475e55e
       * [Git 简介](#git-简介)
          * [创建版本库](#创建版本库)
             * [小结](#小结)
@@ -31,10 +25,13 @@ Table of Contents
             * [小结](#小结-7)
          * [解决冲突](#解决冲突)
             * [小结](#小结-8)
-<<<<<<< HEAD
          * [分支管理策略](#分支管理策略)
-=======
->>>>>>> 81a673821634e66cdae959b15245caec7475e55e
+            * [小结](#小结-9)
+
+<!-- Added by: lion, at: 2019年 10月 11日 星期五 15:31:28 CST -->
+
+<!--te-->
+
 
 # Git 教程
 
@@ -1040,7 +1037,6 @@ Switched to branch 'master'
 
 准备合并 `dev` 分支，请注意 `--no-ff` 参数，表示禁用 `Fast forward`:
 
-<<<<<<< HEAD
 ```code
 $ git merge --no-ff -m "merge with no-ff" dev
 Merge made by the 'recursive' strategy.
@@ -1068,6 +1064,4 @@ $ git log --graph --pretty=oneline --abbrev-commit
 
 合并分支时，加上 `--no-ff` 参数就可以用普通模式合并，合并后的历史有分支，能看出曾经做过合并，而 `Fast forward` 合并就看不出来做过合并。
 
-=======
->>>>>>> 81a673821634e66cdae959b15245caec7475e55e
 ---
