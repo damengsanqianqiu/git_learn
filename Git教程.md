@@ -1126,5 +1126,78 @@ Merge made by the 'recursive' strategy.
  1 file changed, 1 insertion(+), 1 deletion(-)
 ```
 
+现在回到 `dev` 分支干活  
+
+```code
+$ git switch dev
+Switched to branch 'dev'
+
+$ git status
+On branch dev
+nothing to commit, working tree clean
+```
+
+工作区是干净的，需要用 `git stash list` 命名查看刚才存储的工作现场
+
+```code
+$ git stash list
+stash@{0}: WIP on dev: 355581b add merge
+```
+
+Git 把 stash 内容存在某个地方了，但是需要恢复。有两个办法：  
+一是用 `git stash apply` 恢复，但是回复后，stash 内容并不删除，你需要用 `git stash drop` 来删除；  
+二是用 `git stash pop`，恢复的同时把 stash 内容也删了：
+
+```code
+$ git stash pop
+On branch dev
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+    modified:   readme.txt
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+    hello.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
+Dropped stash@{0} (d53affca8101fb2906bc2f2f4c8245e11dd2b07d)
+```
+
+再用 `git stash list` 查看，就看不到任何 stash 内容了。
+
+```code
+$ git stash list
+```
+
+可以多次 `stash`，恢复的时候，先用 `git stash list` 查看，然后恢复指定的 stash，用命令：
+
+```code
+$ git stash apply stash@{0}
+```
+
+在 master 分支修复了 bug 后。假设 dev 分支是早期从 master 分支分出来的，所以，这个 bug 其实在当前的 dev 分支上也存在。  
+同样的 bug，要在 dev 上修复，只需要把 `2f20656 fix issue 007` 这个提交所做的修改“复制”到 dev 分支上。**注意**，只想复制 `2f20656 fix issue 007` 这个提交所做的修改，并不是想把整个 master 分支 merge 过来。  
+Git 提供了一个 `cherry-pick` 命令，让我们能够复制一个特定的提交到当前分支。
+
+```code
+$ git branch
+* dev
+  master
+$ git cherry-pick 2f20656
+[dev 9231486] fix issue 007
+ Date: Fri Oct 11 17:55:11 2019 +0800
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+```
+
+Git 自动给 dev 分支做了一次提交，这次提交的 commit 是 `9231486`,不同于 master 的 `2f20656`，因为这两个 commit 只是改动相同，但确实是两个不同的 commit。用 `git cherry-pick`，就不需要在 dev 分支上手动再把修 bug 的过程重复一遍。
+
+#### 小结
+
+修复 bug 时，会通过创建新的 bug 分支进行修复，然后合并，最后删除；  
+当手头工作没有完成时，先把工作现场 `git stash` 一下，然后修复 bug，修复后，在 `git stash pop` 或者 `git stash apply stash@{0}`（这里的 0 需要注意，可以用 `git stash list` 查看），回到工作现场；  
+在 master 分支上修复的 bug，想要合并到当前的 dev 分支，可以用 `git cherry-pick <commit>`命令，把 bug 提交的修改 "复制"到当前分支，避免重复劳动。
+
+
 ---
 
