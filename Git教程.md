@@ -1087,5 +1087,44 @@ Changes not staged for commit:
 
 Git 提供了一个 `stash` 功能，可以把当前工作现场“储藏”起来，等以后恢复现场继续工作
 
+```code
+$ git stash
+Saved working directory and index state WIP on dev: 355581b add merge
+```
+
+现在，用 `git status` 查看工作区，就是干净的。  
+首先确定哪个分支修复 bug，假定需要在 `master` 分支上修复，就从 `master` 创建临时分支：  
+
+```code
+$ git switch master
+Switched to branch 'master'
+Your branch is ahead of 'origin/master' by 1 commits.
+  (use "git push" to publish your local commits)
+
+$ git switch -b issue-007
+```
+
+修改,bug,再提交
+```code
+$ git add readme.txt
+$ git commit -m "fix issue 007"
+[issue-007 2f20656] fix issue 007
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+```
+
+修复完成后，切换到 `master` 分支，并完成合并，最后删除 `issue-007` 分支
+
+```code
+$ git switch master
+Switched to branch 'master'
+Your branch is ahead of 'origin/master' by 1 commits.
+  (use "git push" to publish your local commits)
+
+$ git merge --no-ff -m "merged bug fix 007" issue-007
+Merge made by the 'recursive' strategy.
+ readme.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+```
 
 ---
+
