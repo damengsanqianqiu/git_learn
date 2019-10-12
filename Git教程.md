@@ -29,11 +29,16 @@
             * [小结](#小结-9)
          * [Bug 分支](#bug-分支)
             * [小结](#小结-10)
+         * [Feature 分支](#feature-分支)
+            * [小结](#小结-11)
+         * [多人协作](#多人协作)
+            * [推送分支](#推送分支)
+            * [抓取分支](#抓取分支)
+            * [小结](#小结-12)
 
-<!-- Added by: lion, at: 2019年 10月 11日 星期五 23:03:17 CST -->
+<!-- Added by: lion, at: 2019年 10月 12日 星期六 16:08:25 CST -->
 
 <!--te-->
-
 
 # Git 教程
 
@@ -75,7 +80,7 @@ Git is free software.
 第一步，用命令 `git add` 将文件添加到仓库：
 
 ```code
-$ git add readme.txt
+git add readme.txt
 ```
 
 第二步，用命令 `git commit` 把文件提交到仓库：
@@ -96,9 +101,9 @@ $ git commit -m "wrote a readme file"
 `commit` 可以一次提交多个文件，所以可以多次 `add` 不同的文件，比如：
 
 ```code
-$ git add file1.txt
-$ git add file2.txt file3.txt
-$ git commit -m "add 3 files."
+git add file1.txt
+git add file2.txt file3.txt
+git commit -m "add 3 files."
 ```
 
 #### 小结
@@ -154,7 +159,7 @@ index d8036c1..013b5bc 100644
 添加修改：
 
 ```code
-$ git add readme.txt
+git add readme.txt
 ```
 
 执行 `git commit` 之前，运行 `git status` 看看当前仓库的状态：
@@ -186,8 +191,8 @@ nothing to commit, working tree clean
 
 ### 小结
 
-- 随时掌握工作区的状态，使用 `git status` 命令。
-- 如果 `git status` 提示有文件被修改过，可用 `git diff` 查看被修改的内容
+* 随时掌握工作区的状态，使用 `git status` 命令。
+* 如果 `git status` 提示有文件被修改过，可用 `git diff` 查看被修改的内容
 
 ### 版本回退
 
@@ -283,9 +288,9 @@ Git 的版本回退速度非常快，因为 Git 内部有个指向当前版本�
 
 #### 小结
 
-- HEAD 指向的版本就是当前的版本，Git 允许在版本之间进行切换，使用命令 `git reset --hard commit_id`。
-- 切换版本前，用 `git log` 查看提交历史，以确定回退到哪个版本。
-- 要重新回到回退前的版本，用 `git reflog` 查看命令历史，找到对应的 `commit_id`，用第一条提到的 `git reset --hard commit_id` 回到某个版本。
+* HEAD 指向的版本就是当前的版本，Git 允许在版本之间进行切换，使用命令 `git reset --hard commit_id`。
+* 切换版本前，用 `git log` 查看提交历史，以确定回退到哪个版本。
+* 要重新回到回退前的版本，用 `git reflog` 查看命令历史，找到对应的 `commit_id`，用第一条提到的 `git reset --hard commit_id` 回到某个版本。
 
 ### 工作区和暂存区
 
@@ -299,8 +304,8 @@ Git 的版本库里存了很多东西。其中最重要的是称为 stage (或�
 
 前面讲了，往 Git 版本库里添加的时候，是分两步执行的：
 
-- 用 `git add` 把文件添加进去，实际上是把文件修改添加到暂存区；
-- 用 `git commit` 提交更改，实际上就是把暂存区的所有内容提交到当前分支。
+* 用 `git add` 把文件添加进去，实际上是把文件修改添加到暂存区；
+* 用 `git commit` 提交更改，实际上就是把暂存区的所有内容提交到当前分支。
 
 因为我们创建 Git 版本库，Git 自动为我们创建了唯一一个 `master` 分支，所以现在，`git commit` 就是往 `master` 分支上提交更改。
 
@@ -478,7 +483,7 @@ Changes not staged for commit:
 上述提示中，会发现 Git 提供 `git checkout -- file` 可以丢弃工作区的修改：
 
 ```code
-$ git checkout -- readme.txt
+git checkout -- readme.txt
 ```
 
 命令 `git checkout -- readme.txt` 意思就是，把 `readme.txt` 文件在工作区的修改全部撤销，这里用两种情况：
@@ -579,7 +584,7 @@ $ git commit -m "add test.txt"
 一般情况下，通常用 `rm` 命令删了：
 
 ```code
-$ rm test.txt
+rm test.txt
 ```
 
 这个时候，Git 知道你删除了文件，因此，工作区和版本库就不一致了，`git status` 命令会告诉你哪些文件被删除了。
@@ -609,7 +614,7 @@ $ git commit -m "remove test.txt"
 另一种情况是删错了，因为版本库里还有，所以把误删的文件恢复到最新的版本：
 
 ```code
-$ git checkout -- test.txt
+git checkout -- test.txt
 ```
 
 `git checkout` 其实是用版本库里的版本替换工作区 的版本，无论攻过去是修改还是删除，都可以还原。  
@@ -627,7 +632,7 @@ $ git checkout -- test.txt
 第一步: 创建 SSH Key.在用户主目录下,看看有没有 .ssh 目录，如果有，看看目录下有没有 id_rsa 和 id_rsa.pub 这两个文件夹，可以直接跳到下一步。如果没有，打开 Shell，创建 SSH Key
 
 ```code
-$ ssh-keygen -t rsa -C "youremail@example.com"
+ssh-keygen -t rsa -C "youremail@example.com"
 ```
 
 `id_rsa` 是私钥，不能泄露除，`id_rsa.pub` 是公钥，可以告诉别人。  
@@ -644,7 +649,8 @@ $ ssh-keygen -t rsa -C "youremail@example.com"
 现在根据 GitHub 的提示，在本地的 git_learn 仓库运行命令
 
 ```code
-$ git remote add origin git@github.com:damengsanqianqiu/git_learn.git
+$ git remote add origin
+git@github.com:damengsanqianqiu/git_learn.git
 ```
 
 下一步，把本地的所有内容推送到远程仓库上：
@@ -668,7 +674,7 @@ Branch master set up to track remote branch master from origin.
 现在，只要本地作了提交，就可以通过命令：
 
 ```code
-$ git push origin master
+git push origin master
 ```
 
 把本地 `master` 分支的最新修改推送到 GitHub
@@ -843,13 +849,13 @@ Git 提供新的 `git switch` 命令来切换分支：
 创建并切换到新的 `dev` 分支，可以使用：  
 
 ```code
-$ git switch -c dev
+git switch -c dev
 ```
 
 切换到已有的 `master` 分支，可以使用：
 
 ```code
-$ git switch master
+git switch master
 ```
 
 使用 `git switch` 比 `git checkout` 更容易理解。
@@ -880,7 +886,7 @@ Creating a new branch is quick AND simple.
 ```
 
 ```code
-$ git add readme.txt 
+$ git add readme.txt
 $ git commit -m "AND simple"
 [featurel 0c8c6ad] AND simple
  1 file changed, 1 insertion(+), 1 deletion(-)
@@ -1107,6 +1113,7 @@ $ git switch -b issue-007
 ```
 
 修改,bug,再提交
+
 ```code
 $ git add readme.txt
 $ git commit -m "fix issue 007"
@@ -1169,13 +1176,13 @@ Dropped stash@{0} (d53affca8101fb2906bc2f2f4c8245e11dd2b07d)
 再用 `git stash list` 查看，就看不到任何 stash 内容了。
 
 ```code
-$ git stash list
+git stash list
 ```
 
 可以多次 `stash`，恢复的时候，先用 `git stash list` 查看，然后恢复指定的 stash，用命令：
 
 ```code
-$ git stash apply stash@{0}
+git stash apply stash@{0}
 ```
 
 在 master 分支修复了 bug 后。假设 dev 分支是早期从 master 分支分出来的，所以，这个 bug 其实在当前的 dev 分支上也存在。  
@@ -1199,7 +1206,6 @@ Git 自动给 dev 分支做了一次提交，这次提交的 commit 是 `9231486
 修复 bug 时，会通过创建新的 bug 分支进行修复，然后合并，最后删除；  
 当手头工作没有完成时，先把工作现场 `git stash` 一下，然后修复 bug，修复后，在 `git stash pop` 或者 `git stash apply stash@{0}`（这里的 0 需要注意，可以用 `git stash list` 查看），回到工作现场；  
 在 master 分支上修复的 bug，想要合并到当前的 dev 分支，可以用 `git cherry-pick <commit>`命令，把 bug 提交的修改 "复制"到当前分支，避免重复劳动。
-
 
 ### Feature 分支
 
@@ -1236,7 +1242,7 @@ $ git commit -m "add feature vulcan"
 切回 `dev`，准备合并
 
 ```code
-$ git switch dev
+git switch dev
 ```
 
 但是，功能需取消，包含机密资料的分支必须销毁：
@@ -1259,5 +1265,150 @@ Deleted branch feature-vulcan (was e27e3b3).
 开发新 feature，最好新建一个分支；
 如果要丢弃一个没有被合并过的分支，可以通过 `git branch -D <name>` 强行删除。
 
----
+### 多人协作
 
+当你从远程仓库克隆时，实际上 Git 自动把本地的 `master` 分支和远程的 `master` 分支对应起来，并且，远程仓库的默认名称是 `origin`。
+
+要查看远程库的信息，用 `git remote`:  
+
+```code
+$ git remote
+origin
+```
+
+或者，用 `git remote -v` 显示更详细的信息
+
+```code
+$ git remote -v
+origin  git@github.com:damengsanqianqiu/git_learn.git (fetch)
+origin  git@github.com:damengsanqianqiu/git_learn.git (push)
+```
+
+上面显示了可以抓取和推送的 `origin` 地址，如果没有推送权限，就看不到 push 的地址。
+
+#### 推送分支
+
+推送分支，就是把该分支上的所有本地提交推送到远程库。推送时，要指定本地分支，这样，Git 就会把该分支推送到远程库对应的远程分支上：
+
+```code
+git push origin master
+```
+
+如果要推送其他分支，比如 `dev`，
+
+```code
+git push origin dev
+```
+
+但是，并不是一定要本地分支往远程推送，哪些分支需要，哪些分支不需要？
+
+* `master` 分支是主分支，因此要时刻与远程同步
+* `dev` 分支是开发分支，团队所有成员都需要在上工作，所以也需要与远程同步；
+* bug 分支只用于在本地修复 bug，不是一定要推送到远程。看实际需求。
+* feature 分支是否推送到远程，取决与团队合作是否在上面开发。
+
+#### 抓取分支
+
+多人协作时，大家会往 `master` 和 `dev` 分支推送各自的修改。  
+
+假设团队伙伴，克隆远程库的项目：
+
+```code
+$ git clone git@github.com:damengsanqianqiu/git_learn.git
+Cloning into 'git_learn'...
+remote: Counting objects: 40, done.
+remote: Compressing objects: 100% (21/21), done.
+remote: Total 40 (delta 14), reused 40 (delta 14), pack-reused 0
+Receiving objects: 100% (40/40), done.
+Resolving deltas: 100% (14/14), done.
+```
+
+默认情况下，只能看到本地的 `master` 分支。  
+现在，小伙伴要在 `dev` 分支上开发，就必须创建远程 `origin` 的 `dev` 分支到本地，于是用命令创建了本地 `dev` 分支：
+
+```code
+git switch -c dev origin/dev
+```
+
+现在，他在 `dev` 上修改，然后时不时把 `dev` 分支 `push` 到远程“
+
+```code
+git add env.txt
+git commit -m "add env"
+git push origin dev
+```
+
+小伙伴已经向 `origin/dev` 分支推送了他的提交，而这个时候，你自己也对同样的文件做出了修改，并试图推送：
+
+```code
+$ git add evn.txt
+
+$ git commit -m "add new env"
+
+$ git push origin dev
+To github.com:damengsanqianqiu/git_learn.git
+ ! [rejected]        dev -> dev (non-fast-forward)
+error: failed to push some refs to 'git@github.com:damengsanqianqiu/git_learn.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. Integrate the remote changes (e.g.
+hint: 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+```
+
+推送失败，因为小伙伴的最新提交和你试图推送的提交有冲突，解决办法：用 `git pull` 把最新的提交从 `origin/dev` 抓下来，然后在本地合并，解决冲突，再推送 ：
+
+```code
+$ git pull
+There is no tracking information for the current branch.
+Please specify which branch you want to merge with.
+See git-pull(1) for details.
+
+    git pull <remote> <branch>
+
+If you wish to set tracking information for this branch you can do so with:
+
+    git branch --set-upstream-to=origin/<branch> dev
+```
+
+`git pull` 也失败了，原因是没有指定本地 `dev` 分支与远程 `origin/dev` 分支的链接，根据提示，设置 `dev` 和 `origin/dev` 的链接：
+
+```code
+$ git branch --set-upstream-to=origin/dev dev
+Branch 'dev' set up to track remote branch 'dev' from 'origin'.
+```
+
+再 pull:
+
+```code
+$ git pull
+Auto-merging env.txt
+CONFLICT (add/add): Merge conflict in env.txt
+Automatic merge failed; fix conflicts and then commit the result.
+```
+
+这是，合并有冲突，手动解决，解决办法和分支管理中的[解决冲突](#解决冲突)一样。解决后，提交，再 push：
+
+```code
+git commit -m "fix env conflict"
+git push origin dev
+```
+
+**因此，多人协作的工作模式通常是这样的**：
+
+1. 首先，试图用 `git push origin <branch-name>` 推送自己的修改；
+2. 如果推送失败，则因为远程分支比本地的版本更新，需要先用 `git pull` 抓取试图合并；
+3. 如果合并没有出图，则解决冲突，并在本地提交；
+4. 没有冲突或解决冲突后，再用 `git push origin <brance-name>` 推送就可以成功。
+
+如果 `git pull` 提示 `no tracking information`，则说明本地分支和远程分支的链接关系没有创建，用命令 `git branch --set-upstream-to=origin/<branch> dev`
+
+#### 小结
+
+* 查看远程库信息，使用命令 `git remote -v`；
+* 本地新建的分支如果不推送到远程，对其他人就是不可见的；
+* 从本地推送，使用 `git push origin branch-name`，如果推送失败，先用 `git pull` 抓取远程的新提交；
+* 在本地创建和远程分支对应的分支，使用 `git switch -c branch-name origin/branch-name`，本地和远程分支的名称最好一一致；
+* 建立本地分支和远程分支的关联，使用 `git branch --set-upstream-to=origin/<branch> <branch>`
+* 从远程抓取分支，使用 `git pull`，如果有冲突，先处理冲突。
+
+---
