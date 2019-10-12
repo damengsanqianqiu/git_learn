@@ -1243,8 +1243,21 @@ $ git switch dev
 
 ```code
 $ git branch -d feature-vulcan
-
+error: The branch 'feature-vulcan' is not fully merged.
+If you are sure you want to delete it, run 'git branch -D feature-vulcan'.
 ```
+
+销毁失败。Git 提醒，`feature-vulcan` 分支还没有被合并，如果删除，将丢失修改。如果确定要删除，使用 `-D` 参数进行删除。
+
+```code
+$ git branch -D feature-vulcan
+Deleted branch feature-vulcan (was e27e3b3).
+```
+
+#### 小结
+
+开发新 feature，最好新建一个分支；
+如果要丢弃一个没有被合并过的分支，可以通过 `git branch -D <name>` 强行删除。
 
 ---
 
