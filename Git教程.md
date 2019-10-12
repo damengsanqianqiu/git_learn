@@ -1201,5 +1201,50 @@ Git 自动给 dev 分支做了一次提交，这次提交的 commit 是 `9231486
 在 master 分支上修复的 bug，想要合并到当前的 dev 分支，可以用 `git cherry-pick <commit>`命令，把 bug 提交的修改 "复制"到当前分支，避免重复劳动。
 
 
+### Feature 分支
+
+软件开发中，总会有新的功能添加进来。
+
+新功能添加进来，当然不希望因为一些实验性质的代码，把主分支搞乱了，所以每添加一个新功能，最好新建一个 feature 分支，在上面开发，完成后，合并，最后删除该 feature 分支。
+
+假设，一个新任务：开发代码为 Vulcan 的新功能，该功能计划用于下一代星际飞船。
+
+于是准备开发：
+
+```code
+$ git checkout -b feature-vulcan
+Switched to a new branch 'feature-vulcan'
+```
+
+假设开发完毕：
+
+```code
+$ git add vulcan.py
+
+$ git status
+On branch feature-vulcan
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+  new file:   vulcan.py
+
+$ git commit -m "add feature vulcan"
+[feature-vulcan a698c9a] add feature vulcan
+ 1 file changed, 12 insertions(+)
+ create mode 100644 vulcan.py
+```
+
+切回 `dev`，准备合并
+
+```code
+$ git switch dev
+```
+
+但是，功能需取消，包含机密资料的分支必须销毁：
+
+```code
+$ git branch -d feature-vulcan
+
+```
+
 ---
 
