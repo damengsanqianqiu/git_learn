@@ -1420,7 +1420,103 @@ Git 有一种成为 rebase 的操作，能够让 Git 的提交历史变成直线
 和远程分支同步后，我们对 `hello.py` 这个文件做了两次提交，用 `git log` 查看：
 
 ```code
+* 24be579 (HEAD -> master) add author
+* 94448fe add comment
+* 6a7291a store Git Learn
+* e36f4e9 (origin/master) add content about co-operative and update catalog
+* 6cd4087 add knowledge about feature branch
+* cb9328a stash content  of feature branch
+* 9ceadc1 update content
+* 04b8bda learn bug branch
+* 129d030 stash master
+*   5a4ac81 merged bug fix 007
+|\  
+| * 2f20656 fix issue 007
+|/  
+* f5ba50b know about stash
+* 4fadb92 update catalog
+*   d295e1e conflict fixed again
+|\  
+| * 81a6738 Update Git教程.md
+* | 62dae67 add image and learn merge with no-ff
+* |   53dd626 merge with no-ff
+|\ \  
+| |/  
+|/|
+| * 355581b add merge
+|/  
+* d046bdc add Image and learn how to fix conflict and merge
+*   31cbd3d conflict fixed
+|\  
+| * 0c8c6ad AND simple
+* | 7bef0e9 & simple
+|/  
+* 88b8e8f learn how to create and merge branch
+```
+
+注意到 Git 用 `(Head -> master)` 和 `(origin/master)` 标识当前分支的 HEAD 和远程 origin 的位置分别是 `24be579 add author` 和 `e36f4e9 add content..`,本地比远程分支快 3 个提交
+
+现在我们尝试推送本地分支：
+
+```code
+$ git push origin master
+To github.com:damengsanqianqiu/git_learn.git
+ ! [rejected]        master -> master (fetch first)
+error: failed to push some refs to 'git@github.com:damengsanqianqiu/git_learn.git'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+```
+
+失败了，说明有人先往远程库推送了分支。先 pull 一下
+
+```code
+$ git pull
+remote: Enumerating objects: 4, done.
+remote: Counting objects: 100% (4/4), done.
+remote: Compressing objects: 100% (1/1), done.
+remote: Total 3 (delta 1), reused 3 (delta 1), pack-reused 0
+Unpacking objects: 100% (3/3), done.
+From github.com:damengsanqianqiu/git_learn
+   e36f4e9..538bd7c  master     -> origin/master
+CONFLICT (add/add): Merge conflict in hello.py
+Auto-merging hello.py
+Automatic merge failed; fix conflicts and then commit the result.
+```
+
+解决冲突，再提交。再用 `git status` 查看状态
+
+```code
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 4 commits.
+  (use "git push" to publish your local commits)
 
 ```
+
+加上刚才合并的提交，现在我们分支比远程分支超前 4 个提交。
+
+用 `git log` 看看
+
+```code
+$ git log  --graph --pretty=oneline --abbrev-commit 
+*   2027993 (HEAD -> master) fix conflict of hello.py
+|\  
+| * 538bd7c (origin/master) set exit = 1
+* | 24be579 add author
+* | 94448fe add comment
+* | 6a7291a store Git Learn
+|/  
+* e36f4e9 add content about co-operative and update catalog
+```
+
+现在分支比较乱，这个时候，rebase 就派上用场了，用 `git rebase` 试试：
+
+```code
+
+```
+
 
 ---
