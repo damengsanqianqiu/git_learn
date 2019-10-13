@@ -1550,3 +1550,130 @@ $ git log --graph --pretty=oneline --abbrev-commit
 * rebase 的目的是使得我们在查看历史提交的变化时更容易，因为分叉的提交需要第三方的对比。
 
 ---
+
+## 标签管理
+
+### 创建标签
+
+在 Git 中打标签非常简单，首先，切换到需要打标签的分支上：
+
+```code
+$ git branch
+* dev
+  master
+
+$ git switch master
+Switched to branch 'master'
+```
+
+然后，敲命令 `git tag <name>` 就可以打一个新标签：
+
+```code
+git tag v1.0
+```
+
+可以用命令 `git tag` 查看所有标签
+
+```code
+$ git tag
+v1.0
+```
+
+默认标签是打在最新提交的 commit 上的。有时候，忘记打标签。解决的方法是，找到历史提交的 commit id，然后打上就可以了。
+
+```code
+$ git log --pretty=oneline --abbrev-commit
+4e60ac8 (HEAD -> master, tag: v1.0, origin/master, origin/HEAD, dev) add rebase content
+efbaefb stage Git Learn
+2027993 fix conflict of hello.py
+538bd7c set exit = 1
+24be579 add author
+94448fe add comment
+6a7291a store Git Learn
+e36f4e9 add content about co-operative and update catalog
+6cd4087 add knowledge about feature branch
+cb9328a stash content  of feature branch
+9ceadc1 update content
+04b8bda learn bug branch
+129d030 stash master
+5a4ac81 merged bug fix 007
+2f20656 fix issue 007
+f5ba50b know about stash
+4fadb92 update catalog
+d295e1e conflict fixed again
+62dae67 add image and learn merge with no-ff
+53dd626 merge with no-ff
+355581b add merge
+81a6738 Update Git教程.md
+d046bdc add Image and learn how to fix conflict and merge
+...
+```
+
+比如说，要对 `add merge` 这次提交打标签，它对应的 commit id 是
+`355581b`，敲入命令：
+
+```code
+git tag v0.9 355581b
+```
+
+再用命令 `git tag` 查看标签：
+
+```code
+$ git tag
+v0.9
+v1.0
+```
+
+注意，标签不是按时间顺序列出的，而是按字母排序的，可以用 `git show <tagname>` 查看标签信息：
+
+```code
+$ git show v0.9
+commit 355581bc5a28bcc767bb3c9a2c90315939ac31e4 (tag: v0.9)
+Author: lion <yiluolion@126.com>
+Date:   Fri Oct 11 12:02:20 2019 +0800
+
+    add merge
+
+diff --git a/readme.txt b/readme.txt
+...
+```
+
+可以看到，`v0.9` 确实打在 `add merge` 这次提交上。
+
+还可以创建带有说明的标签，用 `-a` 指定签名，`-m` 指定说明文字：
+
+```code
+git tag -a v0.1 -m "version 0.1 released" a58b4d1
+```
+
+用命令 `git shwo <tagname>` 可以看到说明文字
+
+```code
+$ git show v0.1
+tag v0.1
+Tagger: damengsanqianqiu <rhythmgolion@gmail.com>
+Date:   Sun Oct 13 21:41:48 2019 +0800
+
+version 0.1 released
+
+commit a58b4d17ac618b23f3ce3db177a773df1b08d93f (tag: v0.1)
+Author: lion <yiluolion@126.com>
+Date:   Wed Oct 9 14:14:44 2019 +0800
+
+    append GPL
+
+diff --git a/readme.txt b/readme.txt
+
+```
+
+> 注意：标签总是和某个 commit 挂钩。如果这个 commmi 既出现在 master 分支，又出现在 dev 分支，那么在这两个分支上都可以看到这个标签。
+
+#### 小结
+
+* 命令 `git tag <tagname>` 用于新建一个标签，默认为 `HEAD`，也可以指定一个 commit id;
+* 命令 `git tag -a <tagname> -m "content"` 可以指定标签信息；
+* 命令 `git tag` 可以查看所有标签；
+* 命令 `git show <tagname>` 查看标签信息。
+
+
+---
