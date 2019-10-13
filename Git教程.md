@@ -1411,4 +1411,16 @@ git push origin dev
 * 建立本地分支和远程分支的关联，使用 `git branch --set-upstream-to=origin/<branch> <branch>`
 * 从远程抓取分支，使用 `git pull`，如果有冲突，先处理冲突。
 
+### Rebase
+
+每次合并再 push 后，分支会变得混乱。
+
+Git 有一种成为 rebase 的操作，能够让 Git 的提交历史变成直线。
+
+和远程分支同步后，我们对 `hello.py` 这个文件做了两次提交，用 `git log` 查看：
+
+```code
+
+```
+
 ---
