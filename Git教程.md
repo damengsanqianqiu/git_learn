@@ -1501,7 +1501,7 @@ Your branch is ahead of 'origin/master' by 4 commits.
 用 `git log` 看看
 
 ```code
-$ git log  --graph --pretty=oneline --abbrev-commit 
+$ git log  --graph --pretty=oneline --abbrev-commit
 *   2027993 (HEAD -> master) fix conflict of hello.py
 |\  
 | * 538bd7c (origin/master) set exit = 1
@@ -1515,8 +1515,38 @@ $ git log  --graph --pretty=oneline --abbrev-commit
 现在分支比较乱，这个时候，rebase 就派上用场了，用 `git rebase` 试试：
 
 ```code
-
+$ git rebase
+First, rewinding head to replay your work on top of it...
+Applying: add comment
+Using index info to reconstruct a base tree...
+M hello.py
+Falling back to patching base and 3-way merge...
+Auto-merging hello.py
+Applying: add author
+Using index info to reconstruct a base tree...
+M hello.py
+Falling back to patching base and 3-way merge...
+Auto-merging hello.py
 ```
 
+再用 `git log` 看看，
+
+```code
+$ git log --graph --pretty=oneline --abbrev-commit
+* 2027993 (HEAD -> master) fix conflict of hello.py
+* 24be579 add author
+* 94448fe add comment
+* 6a7291a store Git Learn
+* 538bd7c (origin/master) set exit = 1
+```
+
+原来分叉的提交现在变成一条直线。我们注意到 Git 把我们本地的提交“挪动”了位置，放到了 `538bd7c (origin/master) set exit = 1`之后，这样整个提交历史就成了一条直线。rebase 操作前后，最终的提交内容是一直的，但是，本地的 commit 修改内容已经变化了，他们的修改不再基于 `e36f4e9 add content...`，而是基于 `538bd7c (origin/master) set exit = 1`，但最后的提交 `2027993` 内容是一致的。
+
+这就是 rebase 操作的特点：把分叉的提交历史“整理”成一条直线，看上去更直观。缺点就是本地的分叉提交已经被修改过了。
+
+#### 小结
+
+* rebase 操作可以把本地未 push 的分叉提交历史整理成直线；
+* rebase 的目的是使得我们在查看历史提交的变化时更容易，因为分叉的提交需要第三方的对比。
 
 ---
